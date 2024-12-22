@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { UserContext } from "./UserContext"
+import terminal from "./assets/terminal.png"
 
 function ClickableObject(){
 
@@ -10,7 +11,8 @@ function ClickableObject(){
     }
 
     return(
-        <div className="w-1/2 h-1/2 bg-white" onClick={handleClick}>
+        <div className="w-3/4 h-max">
+            <img src={terminal} className="w-full h-auto" onClick={handleClick}  draggable="false"/>
         </div>
     )
 }

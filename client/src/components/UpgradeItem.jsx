@@ -1,29 +1,23 @@
 import { useContext } from "react"
-import UpgradeItemUpgrade from "./UpgradeItemUpgrade"
 import { UserContext } from "./UserContext"
 
-function UpgradeItem({ name, upgrades, quantity, cost, setQuant }){
+function UpgradeItem({ name, quantity, cost, onUpgrade, icon }){
 
-    const { points, setPoints } = useContext(UserContext)
-
-    const handleBuy = () => {
-        if (points >= cost) {
-            setPoints(points - cost)
-            setQuant(quantity + 1)
-        }
-    }
+    const { points } = useContext(UserContext)
 
     return(
-        <div className="w-full h-max min-h-20 bg-white flex items-center justify-between p-2">
-            <div className="flex gap-2">
-                <div>{name}</div>
-                <div>{quantity}</div>
-                <div>{cost}</div>
-                <div className="bg-slate-200" onClick={handleBuy}>buy</div>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-                {upgrades.map((item) => <UpgradeItemUpgrade key={item.key} name={item.name} />)}
-            </div>
+        <div className="w-full h-20 border-black border-2 bg-slate-500 rounded-md text-2xl flex gap-2 items-center justify-between px-2">
+            <img src={icon} className="h-auto w-[64px]"/>
+            <div className="flex-grow-[2] bg-slate-400 h-3/4 rounded-md flex items-center pl-2 flex-1">{name}</div>
+            <div className="flex-grow-[2] bg-slate-400 h-3/4 rounded-md flex items-center pl-2 flex-1">{quantity}</div>
+            <div className="flex-grow-[2] bg-slate-400 h-3/4 rounded-md flex items-center pl-2 flex-1">{cost}</div>
+            {cost > points 
+            ?   <div className="h-full w-[64px] flex items-center">
+                    <button className="bg-gray-600 h-3/4 w-full rounded-md">buy</button>
+                </div>
+            :   <div className="h-full w-[64px] flex items-center" onClick={onUpgrade}>
+                    <button className="bg-green-600 h-3/4 w-full rounded-md">buy</button>
+                </div>}
         </div>
     )
 }

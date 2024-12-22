@@ -1,50 +1,62 @@
 import { useContext, useEffect, useState } from "react"
 import UpgradeItem from "./UpgradeItem"
 import { UserContext } from "./UserContext";
+import keyboard from "./assets/keyboard.png"
+
+const upgradeData = {
+    keyboard: {
+        name: "keyboard",
+        type: "click",
+        icon: keyboard,
+        multiplier: 0.1,
+        baseCost: 10,
+        cost: 5,
+        quantity: 0,
+    },
+}
 
 function Upgrades(){
 
-    const { clickMultiplier, setClickMultiplier } = useContext(UserContext)
+    const { setClickMultiplier } = useContext(UserContext);
+    const { points, setPoints } = useContext(UserContext)
 
-    const [ mouseQuant, setMouseQuant ] = useState(0);
-    const [ mouseCost, setMouseCost ] = useState(10);
 
-    const upgrades = [
-        {
-            key: 1,
-            name: "Mouse",
-            upgrades: [
-                {
-                    key: 1,
-                    name: "U1",
-                },
-                {
-                    key: 2,
-                    name: "U2",
-                }
-            ],
-            type: "click",
-            multiplier: 0.1,
-            baseCost: 10,
-            cost: mouseCost,
-            setCost: setMouseCost,
-            quantity: mouseQuant,
-            setQuant: setMouseQuant,
-        }
-    ]
+    const [ upgrades, setUpgrades ] = useState(upgradeData);
+
+    const handleUpgrade = (key) => {
+        const newUpgrades = { ...upgrades };
+        const upgrade = newUpgrades[key];
+        if (upgrade.cost > points) return;
+        upgrade.quantity += 1;
+
+        setPoints(points - upgrade.cost)
+        upgrade.cost = upgrade.baseCost * (upgrade.quantity + 1) * 0.5;
+        setUpgrades(newUpgrades);
+    }
 
     useEffect(() => {
-        upgrades.forEach(item => {
+        let newClickMultiplier = 1;
+        Object.values(upgrades).forEach(item => {
             if (item.type == "click") {
-                setClickMultiplier(1 + item.quantity*item.multiplier)
-                item.setCost(item.baseCost * (item.quantity + 1) * 1/2)
+                newClickMultiplier += item.quantity * item.multiplier;
             }
         });
-    }, [mouseQuant])
+        setClickMultiplier(newClickMultiplier);
+    }, [upgrades]);
 
     return(
         <div className="w-full h-4/5">
-            {upgrades.map((item) => <UpgradeItem key={item.key} name={item.name} quantity={item.quantity} setQuant={setMouseQuant} cost={item.cost} upgrades={item.upgrades} />)}
+            <div className="w-full h-10 border-black border-2 bg-slate-500 rounded-md text-2xl flex gap-2 items-center justify-between px-2 text-center">
+                <span className="w-[64px]"></span>
+                <span className="flex-grow-[2] flex-1">name</span>
+                <span className="flex-grow-[2] flex-1">quantity</span>
+                <span className="flex-grow-[2] flex-1">cost</span>
+                <span className="w-[64px]"></span>
+            </div>
+            {Object.keys(upgrades).map((key) => {
+                const upgrade = upgrades[key];
+                return <UpgradeItem key={key} name={upgrade.name} quantity={upgrade.quantity} cost={upgrade.cost} icon={upgrade.icon} onUpgrade={() => handleUpgrade(key)}/>
+            })}
         </div>
     )
 }
