@@ -18,14 +18,13 @@ npm run dev
 
 ```bash
 cd server
-python3 db/database.py
-python3 app.py
+python3 run.py
 ```
 
 
 ## Tech Stack
 
-**Client:** React, TailwindCSS
+**Client:** React, axios, TailwindCSS
 
 **Server:** Flask, Flask_SQLAlchemy, Flask_Migrate, Flask_JWT_Extended, Flask_Bcrypt
 
