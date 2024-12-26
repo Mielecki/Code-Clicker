@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import datetime
@@ -29,6 +30,8 @@ def create_app():
 
     jwt = JWTManager(app)
 
+    cors = CORS(app)
+
     from models import User
     
     bcrypt = Bcrypt(app)
@@ -37,7 +40,8 @@ def create_app():
     def load_user(uid):
         return User.query.get(int(uid))
 
-    from routes import register_routes
+    from routes import register_routes, handle_cors
+    handle_cors(app)
     register_routes(app, db, bcrypt)
 
     migrate = Migrate(app, db)

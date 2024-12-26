@@ -1,8 +1,8 @@
-from flask import request, jsonify
-from flask_login import login_user, logout_user, current_user, login_required
+from flask import request, jsonify, make_response
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 from models import User
+import datetime
 
 def respond_with_error(msg, code):
     return jsonify({
@@ -11,6 +11,18 @@ def respond_with_error(msg, code):
 
 def respond(json, code):
     return jsonify(json), code
+
+def handle_cors(app):
+    @app.after_request
+    def handle_cors(response):
+        origin = request.headers.get('Origin')
+        if origin == "http://localhost:5173": 
+            response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        response.headers['supports_credentials'] = 'true'
+        return response
 
 def register_routes(app, db, bcrypt):
   
@@ -50,6 +62,7 @@ def register_routes(app, db, bcrypt):
         if user and bcrypt.check_password_hash(user.password, password):
             access = create_access_token(identity=str(user.uid))
             refresh = create_refresh_token(identity=str(user.uid))
+
             return respond({
                 "username": username,
                 "access_token": access,
@@ -72,6 +85,9 @@ def register_routes(app, db, bcrypt):
     def refresh():
         current_user = get_jwt_identity()
         access = create_access_token(identity=current_user)
-        return respond({
+
+        response = make_response(respond({
             "access_token": access
-        }, 200)
+        }, 200))
+
+        return response
