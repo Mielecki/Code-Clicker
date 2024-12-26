@@ -1,3 +1,7 @@
 venv
 __pycache__
-db/code_clicker.db
+*.db
+.env
+
+migrations/alembic.ini
+migrations/__pycache__/
