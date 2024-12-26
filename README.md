@@ -27,7 +27,7 @@ python3 app.py
 
 **Client:** React, TailwindCSS
 
-**Server:** Flask
+**Server:** Flask, Flask_SQLAlchemy, Flask_Migrate, Flask_JWT_Extended, Flask_Bcrypt
 
 **Database:** SQLite
 ## Learing goals
