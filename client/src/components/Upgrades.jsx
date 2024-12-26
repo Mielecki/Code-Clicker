@@ -45,7 +45,7 @@ function Upgrades(){
     }, [upgrades]);
 
     return(
-        <div className="w-full h-4/5">
+        <div className="w-full h-max">
             <div className="w-full h-10 border-black border-2 bg-slate-500 rounded-md text-2xl flex gap-2 items-center justify-between px-2 text-center">
                 <span className="w-[64px]"></span>
                 <span className="flex-grow-[2] flex-1">name</span>

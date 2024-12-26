@@ -6,9 +6,10 @@ import Upgrades from "./Upgrades"
 
 function App() {
 
-    const [ user, setUser ] = useState("guest")
-    const [ points, setPoints ] = useState(0)
-    const [ clickMultiplier, setClickMultiplier ] = useState(1)
+
+    const [ user, setUser ] = useState("guest");
+    const [ points, setPoints ] = useState(0);
+    const [ clickMultiplier, setClickMultiplier ] = useState(1);
 
     return (
         <UserContext.Provider value={{ user, setUser, points, setPoints, clickMultiplier, setClickMultiplier }}>
