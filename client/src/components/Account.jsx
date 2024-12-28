@@ -4,6 +4,7 @@ import AccountButton from "./AccountButton";
 import "axios";
 import axios from "axios";
 import api from "./api";
+import upgradeData from "./upgradesData";
 
 function Account(){
 
@@ -17,7 +18,10 @@ function Account(){
     useEffect(() => {
         api.get('/profile')
         .then((response) => {
-            setProgress(response.data.progress);
+            setProgress(Object.fromEntries(
+                // check if each upgrade is in database. If not, create new progress item. Necessary after creating a new upgrade
+                Object.keys(upgradeData).map((key) => (response.data.progress[key] === undefined ? ([ upgradeData[key].progressName, 0 ]) : [ upgradeData[key].progressName, response.data.progress[key] ]))
+            ));
             setUser(response.data.username);
         })
         .catch((error) => {

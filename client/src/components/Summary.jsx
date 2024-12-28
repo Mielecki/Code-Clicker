@@ -4,7 +4,7 @@ import Account from "./Account"
 
 function Summary(){
 
-    const { points, clickMultiplier } = useContext(UserContext)
+    const { points, clickMultiplier, autoMultiplier } = useContext(UserContext)
 
     return(
         <div className="w-full h-max text-2xl text-white flex justify-between">
@@ -12,6 +12,8 @@ function Summary(){
                 Points: {Math.round(points * 100) / 100}
                 <br />
                 Click Multiplier: {Math.round(clickMultiplier * 100) / 100}
+                <br />
+                Auto Multiplier: {Math.round(autoMultiplier * 100) / 100}
             </div>
             <Account />
         </div>

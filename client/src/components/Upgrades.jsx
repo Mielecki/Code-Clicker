@@ -6,7 +6,7 @@ import upgradeData from "./upgradesData";
 
 function Upgrades(){
 
-    const { setClickMultiplier, points, setPoints, progress, setProgress, user } = useContext(UserContext);
+    const { setClickMultiplier, points, setPoints, progress, setProgress, user, setAutoMultiplier } = useContext(UserContext);
 
     const progressRef = useRef(progress);
 
@@ -18,7 +18,6 @@ function Upgrades(){
         const cost = calculateCost(newProgress[key], upgradeData[key].baseCost);
         if (cost > points) return;
         newProgress[key] += 1;
-
         setPoints(points - cost);
         setProgress(newProgress);
     }
@@ -44,12 +43,16 @@ function Upgrades(){
     // update multipliers every progress change
     useEffect(() => {
         let newClickMultiplier = 1;
+        let newAutoMultiplier = 0;
         Object.keys(progress).forEach(key => {
             const item = upgradeData[key];
             if (item.type == "click") {
                 newClickMultiplier += progress[key] * item.multiplier;
+            } else if (item.type == "auto") {
+                newAutoMultiplier += progress[key] * item.multiplier;
             }
         });
+        setAutoMultiplier(newAutoMultiplier);
         setClickMultiplier(newClickMultiplier);
     }, [progress]);
 
