@@ -1,79 +1,57 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import UpgradeItem from "./UpgradeItem"
 import { UserContext } from "./UserContext";
-import keyboard from "./assets/keyboard.png"
-import axios from "axios";
 import api from "./api";
-
-const upgradeData = {
-    keyboard: {
-        name: "keyboard",
-        type: "click",
-        icon: keyboard,
-        multiplier: 0.1,
-        baseCost: 10,
-        cost: 5,
-        quantity: 0,
-    },
-}
+import upgradeData from "./upgradesData";
 
 function Upgrades(){
 
     const { setClickMultiplier, points, setPoints, progress, setProgress, user } = useContext(UserContext);
 
-    const [ upgrades, setUpgrades ] = useState(upgradeData);
+    const progressRef = useRef(progress);
 
+    // calculate cost of the upgrade TODO: add a cost multiplier to base upgradeData 
+    const calculateCost = (quantity, baseCost) => baseCost * (quantity + 1) * 0.5; 
+    
     const handleUpgrade = (key) => {
-        const newUpgrades = { ...upgrades };
-        const upgrade = newUpgrades[key];
-        if (upgrade.cost > points) return;
-        upgrade.quantity += 1;
+        const newProgress = { ...progress };
+        const cost = calculateCost(newProgress[key], upgradeData[key].baseCost);
+        if (cost > points) return;
+        newProgress[key] += 1;
 
-        setPoints(points - upgrade.cost)
-        upgrade.cost = upgrade.baseCost * (upgrade.quantity + 1) * 0.5;
-        setUpgrades(newUpgrades);
+        setPoints(points - cost);
+        setProgress(newProgress);
     }
 
+    // using useRef because of problem with not updating progress
     useEffect(() => {
-        const newUpgrades = { ...upgrades };
-        if (progress) {
-            Object.entries(progress).map(([key, value]) => {
-                const upgrade = newUpgrades[key];
-                upgrade.quantity = value;
-                upgrade.cost = upgrade.baseCost * (upgrade.quantity + 1) * 0.5;
-            })
-            setUpgrades(newUpgrades);
-        }
-    }, [progress])
+        progressRef.current = progress;
+    }, [progress]);
 
     useEffect(() => {
         const saveProgress = () => {
-            const newProgress = Object.fromEntries(
-                Object.entries(upgrades).map(([key, value]) => [key, value.quantity])
-            )
-            setProgress(newProgress);
-            if (user != "guest"){
-                api.post("/save", newProgress)
+            if (user != "guest"){ 
+                api.post("/save", progressRef.current)
                 .catch((error) => console.log(error));
             }
         }
 
-        saveProgress();
-
-        const intervalId = setInterval(saveProgress, 10000);
+        const intervalId = setInterval(saveProgress, 60000);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [user]);
 
+    // update multipliers every progress change
     useEffect(() => {
         let newClickMultiplier = 1;
-        Object.values(upgrades).forEach(item => {
+        Object.keys(progress).forEach(key => {
+            const item = upgradeData[key];
             if (item.type == "click") {
-                newClickMultiplier += item.quantity * item.multiplier;
+                newClickMultiplier += progress[key] * item.multiplier;
             }
         });
         setClickMultiplier(newClickMultiplier);
-    }, [upgrades]);
+    }, [progress]);
 
     return(
         <div className="w-full h-max">
@@ -84,9 +62,10 @@ function Upgrades(){
                 <span className="flex-grow-[2] flex-1">cost</span>
                 <span className="w-[64px]"></span>
             </div>
-            {Object.keys(upgrades).map((key) => {
-                const upgrade = upgrades[key];
-                return <UpgradeItem key={key} name={upgrade.name} quantity={upgrade.quantity} cost={upgrade.cost} icon={upgrade.icon} onUpgrade={() => handleUpgrade(key)}/>
+            {Object.keys(upgradeData).map((key) => {
+                const upgrade = upgradeData[key];
+                const quantity = progress[key] === undefined ? 0 : progress[key];
+                return <UpgradeItem key={key} name={upgrade.progressName} quantity={quantity} cost={calculateCost(quantity, upgrade.baseCost)} icon={upgrade.icon} onUpgrade={() => handleUpgrade(key)}/>
             })}
         </div>
     )

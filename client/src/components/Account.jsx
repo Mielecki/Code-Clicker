@@ -13,7 +13,7 @@ function Account(){
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
 
-    // fetch data from server
+    // fetch data from server (only when user has changed)
     useEffect(() => {
         api.get('/profile')
         .then((response) => {
