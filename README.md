@@ -1,36 +1,58 @@
-
 # Code-Clicker
 
-A simple web clicker game. 
+A simple web-based clicker game that allows users to create accounts and save their progress securely in the cloud.
 
 
 ## Deployment
 
-1. Navigate to the `client` directory and start the frontend application:
+### Client
 
-```bash
+1. Navigate to the `client` directory:
+
+```
 cd client
+```
+
+2. Install dependencies and start the frontend application:
+
+```
 npm install
 npm run dev
 ```
 
-2. Navigate to the `server` directory and set up the backend:
+### Server
 
-```bash
+1. Navigate to the `server` directory:
+
+```
 cd server
+```
+
+2. Set up your python virtual enviroment
+
+3. Install the required packages:
+
+```
+pip install -r requirements.txt
+```
+
+3. Initialize the database:
+
+```
+flask db init
+flask db migrate
+flask db upgrade
+```
+
+4. Run the backend:
+
+```
 python3 run.py
 ```
 
 
 ## Tech Stack
 
-**Client:** React, axios, TailwindCSS
+**Client:** React, TailwindCSS
 
-**Server:** Flask, Flask_SQLAlchemy, Flask_Migrate, Flask_JWT_Extended, Flask_Bcrypt
-
-**Database:** SQLite
-## Learing goals
-
-1. Gain a better understanding of frontend development  
-2. Learn setting up a backend server using Flask  
-3. Learn how authentication works  
+**Server:** Flask
