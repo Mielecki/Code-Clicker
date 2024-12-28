@@ -13,17 +13,14 @@ function Account(){
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
 
+    // fetch data from server
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-              const response = await api.get('/profile');
-              setUser(response.data.username);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        fetchProfile();
+        api.get('/profile')
+        .then((response) => {
+            setUser(response.data.username);
+        })
+        .catch((error) => {
+        })
     }, [])
 
     const handleSubmit = (e) => {

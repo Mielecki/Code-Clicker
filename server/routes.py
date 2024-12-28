@@ -34,6 +34,9 @@ def register_routes(app, db, bcrypt):
 
         if not username or not password:
             return respond_with_error("Username and password are required", 400)
+        
+        if username.lower() == "guest":
+            return respond_with_error("Cannot create 'guest' user", 409)
 
         hashed_password = bcrypt.generate_password_hash(password)
 

@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -25,9 +24,6 @@ def create_app():
 
     db.init_app(app)
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
     jwt = JWTManager(app)
 
     cors = CORS(app)
@@ -35,10 +31,6 @@ def create_app():
     from models import User
     
     bcrypt = Bcrypt(app)
-
-    @login_manager.user_loader
-    def load_user(uid):
-        return User.query.get(int(uid))
 
     from routes import register_routes, handle_cors
     handle_cors(app)
