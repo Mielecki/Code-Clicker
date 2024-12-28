@@ -9,6 +9,7 @@ function Upgrades(){
     const { setClickMultiplier, points, setPoints, progress, setProgress, user, setAutoMultiplier } = useContext(UserContext);
 
     const progressRef = useRef(progress);
+    const pointsRef = useRef(points);
 
     // calculate cost of the upgrade TODO: add a cost multiplier to base upgradeData 
     const calculateCost = (quantity, baseCost) => baseCost * (quantity + 1) * 0.5; 
@@ -28,14 +29,23 @@ function Upgrades(){
     }, [progress]);
 
     useEffect(() => {
+        pointsRef.current = points;
+    }, [points]);
+
+    useEffect(() => {
         const saveProgress = () => {
+            const data = {
+                progress_data: progressRef.current,
+                points: pointsRef.current,
+            }
             if (user != "guest"){ 
-                api.post("/save", progressRef.current)
+                console.log(data)
+                api.post("/save", data)
                 .catch((error) => console.log(error));
             }
         }
 
-        const intervalId = setInterval(saveProgress, 60000);
+        const intervalId = setInterval(saveProgress, 5000);
 
         return () => clearInterval(intervalId);
     }, [user]);

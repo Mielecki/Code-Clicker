@@ -16,3 +16,4 @@ class Progress(db.Model):
         primary_key=True
     )
     progress_data = db.Column(db.JSON, nullable=False)
+    points = db.Column(db.Integer, nullable=False)

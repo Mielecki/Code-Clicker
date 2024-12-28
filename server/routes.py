@@ -78,13 +78,21 @@ def register_routes(app, db, bcrypt):
     @jwt_required()
     def profile():
         user = User.query.filter(User.uid == get_jwt_identity()).first()
+
         progress = Progress.query.filter(Progress.uid == user.uid).first()
 
-
-        return respond({
-            "username": user.username,
-            "progress": progress.progress_data
-        }, 200)
+        if progress:
+            return respond({
+                "username": user.username,
+                "progress": progress.progress_data,
+                "points": progress.points
+            }, 200)
+        else:
+            return respond({
+                "username": user.username,
+                "progress": {},
+                "points": 0
+            }, 200)
     
     @app.route("/save", methods=["POST"])
     @jwt_required()
@@ -95,11 +103,12 @@ def register_routes(app, db, bcrypt):
         progress = Progress.query.filter(Progress.uid == user.uid).first()
 
         if progress:
-            progress.progress_data = data
+            progress.progress_data = data.get("progress_data")
+            progress.points = data.get("points")
             db.session.commit()
             return respond({}, 200)
         else:
-            new_progress = Progress(uid=user.uid, progress_data=data)
+            new_progress = Progress(uid=user.uid, progress_data=data.get("progress_data"), points=data.get("points"))
             db.session.add(new_progress)
             db.session.commit()
             return respond({}, 200)

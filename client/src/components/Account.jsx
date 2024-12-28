@@ -8,7 +8,7 @@ import upgradeData from "./upgradesData";
 
 function Account(){
 
-    const { user, setUser, setProgress } = useContext(UserContext);
+    const { user, setUser, setProgress, setPoints } = useContext(UserContext);
     const [ signingUp, setSigningUp ] = useState(false);
     const [ loggingIn, setLoggingIn ] = useState(false);
     const [ username, setUsername ] = useState("");
@@ -22,6 +22,7 @@ function Account(){
                 // check if each upgrade is in database. If not, create new progress item. Necessary after creating a new upgrade
                 Object.keys(upgradeData).map((key) => (response.data.progress[key] === undefined ? ([ upgradeData[key].progressName, 0 ]) : [ upgradeData[key].progressName, response.data.progress[key] ]))
             ));
+            setPoints(response.data.points);
             setUser(response.data.username);
         })
         .catch((error) => {
