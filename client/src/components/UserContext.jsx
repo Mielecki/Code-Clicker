@@ -7,4 +7,6 @@ export const UserContext = createContext({
     setPoints: () => {},
     clickMultiplier: 1,
     setClickMultiplier: () => {},
+    progress: {},
+    setProgress: () => {},
 })

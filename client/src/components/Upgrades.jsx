@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react"
 import UpgradeItem from "./UpgradeItem"
 import { UserContext } from "./UserContext";
 import keyboard from "./assets/keyboard.png"
+import axios from "axios";
+import api from "./api";
 
 const upgradeData = {
     keyboard: {
@@ -17,9 +19,7 @@ const upgradeData = {
 
 function Upgrades(){
 
-    const { setClickMultiplier } = useContext(UserContext);
-    const { points, setPoints } = useContext(UserContext)
-
+    const { setClickMultiplier, points, setPoints, progress, setProgress, user } = useContext(UserContext);
 
     const [ upgrades, setUpgrades ] = useState(upgradeData);
 
@@ -33,6 +33,37 @@ function Upgrades(){
         upgrade.cost = upgrade.baseCost * (upgrade.quantity + 1) * 0.5;
         setUpgrades(newUpgrades);
     }
+
+    useEffect(() => {
+        const newUpgrades = { ...upgrades };
+        if (progress) {
+            Object.entries(progress).map(([key, value]) => {
+                const upgrade = newUpgrades[key];
+                upgrade.quantity = value;
+                upgrade.cost = upgrade.baseCost * (upgrade.quantity + 1) * 0.5;
+            })
+            setUpgrades(newUpgrades);
+        }
+    }, [progress])
+
+    useEffect(() => {
+        const saveProgress = () => {
+            const newProgress = Object.fromEntries(
+                Object.entries(upgrades).map(([key, value]) => [key, value.quantity])
+            )
+            setProgress(newProgress);
+            if (user != "guest"){
+                api.post("/save", newProgress)
+                .catch((error) => console.log(error));
+            }
+        }
+
+        saveProgress();
+
+        const intervalId = setInterval(saveProgress, 10000);
+
+        return () => clearInterval(intervalId);
+    }, []);
 
     useEffect(() => {
         let newClickMultiplier = 1;

@@ -1,7 +1,7 @@
 from flask import request, jsonify, make_response
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
-from models import User
+from models import User, Progress
 import datetime
 
 def respond_with_error(msg, code):
@@ -78,10 +78,31 @@ def register_routes(app, db, bcrypt):
     @jwt_required()
     def profile():
         user = User.query.filter(User.uid == get_jwt_identity()).first()
+        progress = Progress.query.filter(Progress.uid == user.uid).first()
+
+
         return respond({
             "username": user.username,
-            "uid": user.uid
+            "progress": progress.progress_data
         }, 200)
+    
+    @app.route("/save", methods=["POST"])
+    @jwt_required()
+    def save():
+        user = User.query.filter(User.uid == get_jwt_identity()).first()
+
+        data = request.get_json()
+        progress = Progress.query.filter(Progress.uid == user.uid).first()
+
+        if progress:
+            progress.progress_data = data
+            db.session.commit()
+            return respond({}, 200)
+        else:
+            new_progress = Progress(uid=user.uid, progress_data=data)
+            db.session.add(new_progress)
+            db.session.commit()
+            return respond({}, 200)
     
     @app.route("/refresh", methods=["POST"])
     @jwt_required(refresh=True)

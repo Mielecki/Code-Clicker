@@ -7,7 +7,7 @@ import api from "./api";
 
 function Account(){
 
-    const { user, setUser } = useContext(UserContext);
+    const { user, setUser, setProgress } = useContext(UserContext);
     const [ signingUp, setSigningUp ] = useState(false);
     const [ loggingIn, setLoggingIn ] = useState(false);
     const [ username, setUsername ] = useState("");
@@ -17,11 +17,12 @@ function Account(){
     useEffect(() => {
         api.get('/profile')
         .then((response) => {
+            setProgress(response.data.progress);
             setUser(response.data.username);
         })
         .catch((error) => {
         })
-    }, [])
+    }, [user])
 
     const handleSubmit = (e) => {
         e.preventDefault();
