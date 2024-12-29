@@ -56,7 +56,7 @@ function ClickableObject(){
     return(
         <div className="w-3/4 h-max active:scale-105 grid" onClick={handleClick}>
             <img src={terminal} className="w-full h-auto col-start-1 col-end-1 row-start-1 row-end-1"  draggable="false"/>
-            <div className="w-full h-auto col-start-1 col-end-1 row-start-1 row-end-1 flex flex-col justify-end text-green-500 font-bold text-[130%] ml-[2%] mb-[0.5%]">
+            <div className="w-full h-auto col-start-1 col-end-1 row-start-1 row-end-1 flex flex-col justify-end text-green-500 font-bold text-[1.4vw] ml-[2%] mb-[0.5%]">
                 <div className="font-vt323 font-thin">{code[6]}</div>
                 <div className="font-vt323 font-thin">{code[5]}</div>
                 <div className="font-vt323 font-thin">{code[4]}</div>
