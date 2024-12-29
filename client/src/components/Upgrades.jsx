@@ -45,7 +45,7 @@ function Upgrades(){
             }
         }
 
-        const intervalId = setInterval(saveProgress, 5000);
+        const intervalId = setInterval(saveProgress, 60000);
 
         return () => clearInterval(intervalId);
     }, [user]);
