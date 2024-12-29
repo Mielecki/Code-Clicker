@@ -78,7 +78,7 @@ function Upgrades(){
             {Object.keys(upgradeData).map((key) => {
                 const upgrade = upgradeData[key];
                 const quantity = progress[key] === undefined ? 0 : progress[key];
-                return <UpgradeItem key={key} name={upgrade.progressName} quantity={quantity} cost={calculateCost(quantity, upgrade.baseCost)} icon={upgrade.icon} onUpgrade={() => handleUpgrade(key)}/>
+                return <UpgradeItem key={key} name={upgrade.progressName} quantity={quantity} multiplier={upgrade.multiplier} type={upgrade.type} cost={calculateCost(quantity, upgrade.baseCost)} icon={upgrade.icon} onUpgrade={() => handleUpgrade(key)}/>
             })}
         </div>
     )

@@ -4,6 +4,7 @@
 
 html {
     font-family: consolas;
+    overflow-x: hidden;
 }
 
 img {
