@@ -66,6 +66,10 @@ function Account(){
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         setUser("guest");
+        setProgress(Object.fromEntries(
+            Object.values(upgradeData).map((item) => [ item.progressName, 0 ])
+        ));
+        setPoints(0);
     }
 
     if (user == "guest" && !signingUp & !loggingIn) {
@@ -91,7 +95,7 @@ function Account(){
     }
     else {
         return (
-        <div>
+        <div className="flex flex-col">
             <h1>Hello, {user}!</h1>
             <AccountButton onClick={handleLogOut}>Log out</AccountButton>
         </div>

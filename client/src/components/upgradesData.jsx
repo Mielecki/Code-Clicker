@@ -1,5 +1,6 @@
 import keyboard from "./assets/keyboard.png"
 import book from "./assets/book.png"
+import online_course from "./assets/online_course.png"
 
 const upgradeData = {
     keyboard: {
@@ -15,6 +16,13 @@ const upgradeData = {
         icon: book,
         multiplier: 0.1,
         baseCost: 20,
+    },
+    onlineCourse: {
+        progressName: "onlineCourse",
+        type: "auto",
+        icon: online_course,
+        multiplier: 0.5,
+        baseCost: 200,
     }
 }
 

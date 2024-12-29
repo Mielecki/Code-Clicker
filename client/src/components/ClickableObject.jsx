@@ -15,7 +15,7 @@ function ClickableObject(){
     const prevPointsRef = useRef(points);
     useEffect(() => {
         const prevPoints = prevPointsRef.current;
-        const characters = "abcdefghijklmnopqrstuvwxyz 0123456789";
+        const characters = "abcdefghijklmnopqrstuvwxyz     0123456789";
         const n = characters.length;
         let result = "";
         
